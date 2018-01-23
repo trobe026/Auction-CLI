@@ -1,5 +1,6 @@
 var inquirer = require("inquirer");
 var mysql = require("mysql");
+var consoleTable = require('console-table');
 
 // When ready to post an item, just run post(item name, item price)
 // var post = require("./post.js");
@@ -30,8 +31,9 @@ var startAuction = function() {
     {
       type: "list",
       name: "choice",
-      message: "Pick your poison: ",
+      message: "\nAuction Main Menu:\n",
       choices: [
+        'List all items',
         new inquirer.Separator(),
         'Post an item.',
         new inquirer.Separator(),
@@ -39,12 +41,16 @@ var startAuction = function() {
         new inquirer.Separator(),
         'Remove an item.',
         new inquirer.Separator(),
-        'Exit Program'
+        'Exit Program\n'
       ]
     }
     ])
     .then(function(response) {
-      if (response.choice === 'Post an item.') {
+      if (response.choice === 'List all items') {
+        listItems();
+        doNext();
+      }
+      else if (response.choice === 'Post an item.') {
         inquirer.prompt([
           {
             type: "input",
@@ -86,6 +92,7 @@ var startAuction = function() {
         });
 
       } else if (response.choice === 'Remove an item.') {
+        listItems();
         // listitems();
         inquirer.prompt([
           {
@@ -100,7 +107,7 @@ var startAuction = function() {
           doNext();
         });
 
-      } else if(response.choice === 'Exit Program') {
+      } else if (response.choice === 'Exit Program\n') {
         runProg = false;
         startAuction();
       }
@@ -113,7 +120,16 @@ startAuction();
 function listItems() {
   var query = connection.query("SELECT * FROM auctionItems",function(err, res) {
     for (var i = 0; i < res.length; i++) {
-      console.log(res[i].id + " | " + res[i].item + " | " + res[i].bid);
+      if (i < 1) {
+        console.log("\n" + res[i].id + " | " + res[i].item + " | " + res[i].bid);
+      } else {
+        console.log(res[i].id + " | " + res[i].item + " | " + res[i].bid);
+      }
+      // consoleTable([
+      //   ['','Item Name', 'Current Bid'],
+      //   [res[i].id, res[i].item, res[i].bid],
+      //   [res[i].id, res[i].item, res[i].bid]
+      // ]);
     }
     console.log("\n" + res.length + " items listed.");
     });
@@ -165,7 +181,7 @@ function doNext() {
     {
       type: "list",
       name: "nextAction",
-      message: "What would you like to do now?",
+      message: "\n\nWhat would you like to do now?\n",
       choices: [
         'Back to Main Menu',
         'Exit Program'
@@ -175,7 +191,7 @@ function doNext() {
   .then(function(resp) {
     if (resp.nextAction === 'Back to Main Menu') {
       startAuction();
-    } else if(resp.nextAction === 'Exit Program') {
+    } else if (resp.nextAction === 'Exit Program') {
       runProg = false;
       startAuction();
     }

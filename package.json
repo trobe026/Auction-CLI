@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/joseph-marlitt/great-bay#readme",
   "dependencies": {
+    "console-table": "^0.1.2",
     "inquirer": "^5.0.1"
   }
 }
