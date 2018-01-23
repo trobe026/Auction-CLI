@@ -14,11 +14,14 @@ var connection = mysql.createConnection({
   database: "server"
 });
 
+// these variables are to store user choices throughout inquirer prompts
 var itemName;
 var bidAmnt;
+// this variables store booleans which control which functions run, preventing errors if functions are run twice.
 var runProg = true;
 var connected = false;
 
+// main app function - recursive
 var startAuction = function() {
   if (!runProg) {
     console.log("Thanks for bidding! hit ctrl + c to exit");
@@ -96,7 +99,7 @@ var startAuction = function() {
           deleteItem();
           doNext();
         });
-        
+
       } else if(response.choice === 'Exit Program') {
         runProg = false;
         startAuction();
